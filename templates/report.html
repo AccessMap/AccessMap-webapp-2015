@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <link href="{{ url_for('static', filename='css/report.css') }}" rel="stylesheet"> 
+    <div class="container-fluid">
+
+      <p style="font-size: 16px; text-align: center; margin-top: 10px">Did you encounter an obstacle not listed on the map?</p>
+      <hr style="margin-bottom: 10px">
+      <h3>What Type of Obstacle?</h3>
+      <div class="row icon-row">
+        <div class="col-xs-6">
+          <a href="{{ url_for('construction') }}" class="btn btn-info btn-lg menu-icon construction-image" style="padding-left: 6px; margin-left: -15px">Construction</a>
+        </div>
+        <div class="col-xs-6">
+          <a href="{{ url_for('incline') }}" class="btn btn-info btn-lg menu-icon incline-image" style="margin-left: -10px">Hill</a>
+        </div>
+      </div>
+      <div class="row icon-row">
+        <div class="col-xs-6">
+          <a href="{{ url_for('elevator') }}" class="btn btn-info btn-lg menu-icon elevator-image" style="margin-left: -15px">No Elevator</a>
+        </div>
+        <div class="col-xs-6">
+          <a href="{{ url_for('ramp') }}" class="btn btn-info btn-lg menu-icon ramp-image" style="margin-left: -10px">No Ramp</a>
+        </div>
+      </div>
+      <div class="row icon-row">
+        <div class="col-xs-6">
+          <a href="{{ url_for('stairs') }}" class="btn btn-info btn-lg menu-icon stairs-image" style="margin-left: -15px">Stairs</a>
+        </div>
+        <div class="col-xs-6">
+          <a href="{{ url_for('other') }}" class="btn btn-info btn-lg menu-icon other-image" style="margin-left: -10px">Other</a>
+        </div>
+      </div>
+    </div>
+{% endblock content %}
+

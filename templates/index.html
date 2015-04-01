@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/L.Control.Locate.scss') }}"/>
+    <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    html, body, #map {
+        height: 100%;
+        width: 100%;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div id="map"></div>
+{% endblock %}
+{% block script %}
+  {{ super() }}
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='js/L.Control.Locate.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
+
+  <script>
+    var map = L.map('map', {center: [47.652810, -122.308690], zoom: 16});
+    var FEATUREZOOM = 15;
+
+    mapbox = L.tileLayer('http://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + {{ mapbox_token|tojson }}, {
+      attribution: 'Map data &copy;',
+      maxZoom: 18
+    });
+
+    var stops = L.layerGroup({minZoom: 8});
+    var elevationlayer = L.layerGroup({minZoom: 8});
+    var curbs = L.layerGroup({minZoom: 8});
+
+    mapbox.addTo(map);
+    stops.addTo(map);
+    // elevations enters the global namespace at some point, don't know why
+    elevationlayer.addTo(map);
+    curbs.addTo(map);
+
+    // TODO: Actual desired behavior: always try to show your location on the map
+    // If button is clicked, ask for current location, then zoom to it.
+    {% if 'lat' in location_args and 'lon' in location_args %}
+      var location_info = {{ location_args|tojson }};
+      map.setView([location_info['lat'], location_info['lon']], 16);
+    {% else %}
+      var located = map.locate({setView: false, maxZoom: 16})
+    {% endif %}
+
+    // Read in the elevation data to increase speed later on (generate a promise)
+    // TODO: make the sever offer a route for requesting elevation data with
+    // a bbox filter.
+    elevationDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/sidewalk-grades-geoJSON-latest.json") }}'
+    });
+    curbDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/sdot-sidewalk-curb-geoJSON-latest.json") }}'
+    });
+
+    map.on('locationfound', function(e) {
+      map.setView([e.latitude, e.longitude], 16);
+    });
+
+    map.on('moveend', function(e) {
+      if (map.getZoom() >= FEATUREZOOM) {
+        requestStopsUpdate(stops, map);
+        requestElevationsUpdate(elevationlayer, map);
+        requestCurbsUpdate(curbs, map);
+      }
+    });
+
+    map.on('zoomend', function() {
+      if (map.getZoom() < FEATUREZOOM) {
+        map.removeLayer(stops);
+        map.removeLayer(elevationlayer);
+        map.removeLayer(curbs);
+      } else {
+        stops.addTo(map);
+        elevationlayer.addTo(map);
+        curbs.addTo(map);
+      }
+    });
+
+    map.on('contextmenu', function() {
+      // TODO: actually show a popup first
+      window.location.href = '{{ url_for("report") }}';
+    });
+
+    L.control.locate().addTo(map);
+
+  </script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+	    <div class="container">
+	    	<div class="row">
+	    		<h1 style="font-size: 16px; margin-top: 10px; margin-bottom: 10px">Thank you!</h1>
+	    	</div>
+
+	      <h3 style="margin-top: 15px">Report Submitted</h3>
+	      <div class="report">
+	      	<p>Thank you for letting us know.  Your changes will be reflected on our maps soon. :]</p>
+        </div>
+	    </div>
+
+    <script>
+      function returnTimer() {setTimeout(function(){window.location.href = "../maptest";},3000);}
+      returnTimer();
+    </script>
+{% endblock content %}
