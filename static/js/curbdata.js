@@ -17,6 +17,11 @@ function requestCurbsUpdate(layerGroup, map) {
             })
           }
         });
+
+        //Display info when user clicks on the curb marker
+        var popup = L.popup().setContent("<b>Curb Ramp</b>");
+        point.bindPopup(popup);
+
         layerGroup.addLayer(point);
       }
     }

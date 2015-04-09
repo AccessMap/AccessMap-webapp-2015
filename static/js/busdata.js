@@ -16,7 +16,7 @@ function requestStopsUpdate(layerGroup, map) {
   var busIcon = L.icon({
     iconUrl: '../static/img/bus.png',
     iconSize: [30, 30],
-    iconAnchor: [15, 15]
+    iconAnchor: [10, 0]
   });
 
   function requestStops(callback) {
@@ -61,6 +61,11 @@ function requestStopsUpdate(layerGroup, map) {
           return L.marker(latlng, {icon: busIcon});
         }
       });
+
+      //Display info when user clicks on the bus stop
+      var popup = L.popup().setContent("<b>Bus Stop at " + row['name'] + "</b>");
+      marker.bindPopup(popup);
+
       layerGroup.addLayer(marker);
     }
   }
