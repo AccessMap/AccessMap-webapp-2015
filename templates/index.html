@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/L.Control.Locate.scss') }}"/>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.css' rel='stylesheet' />
     <style>
     body {
       padding: 0;
@@ -22,25 +23,31 @@
 {% block script %}
   {{ super() }}
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.js'></script>
   <script src="{{ url_for('static', filename='js/L.Control.Locate.js') }}"></script>
   <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
 
   <script>
+    var FEATUREZOOM = 17;
     var map = L.map('map', {center: [47.652810, -122.308690], zoom: 16});
-    var FEATUREZOOM = 15;
 
     mapbox = L.tileLayer('http://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + {{ mapbox_token|tojson }}, {
       attribution: 'Map data &copy;',
       maxZoom: 18
     });
+    mapbox.addTo(map);
+
+    elevation_tiles = L.mapbox.tileLayer('nbolten.3d42b895', {
+      accessToken: {{ mapbox_token|tojson }}
+    });
+    elevation_tiles.addTo(map);
 
     var stops = L.layerGroup({minZoom: 8});
     var elevationlayer = L.layerGroup({minZoom: 8});
     var curbs = L.layerGroup({minZoom: 8});
 
-    mapbox.addTo(map);
     stops.addTo(map);
     // elevations enters the global namespace at some point, don't know why
     elevationlayer.addTo(map);
