@@ -20,6 +20,7 @@
 {% block content %}
   <div id="map"></div>
 {% endblock %}
+
 {% block script %}
   {{ super() }}
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
@@ -48,10 +49,17 @@
     var elevationlayer = L.layerGroup({minZoom: 8});
     var curbs = L.layerGroup({minZoom: 8});
 
-    stops.addTo(map);
     // elevations enters the global namespace at some point, don't know why
-    elevationlayer.addTo(map);
-    curbs.addTo(map);
+
+    //Create filter checkboxes for the overlays
+    var overlayFilter = {
+      "Bus Stops": stops,
+      "Curb Ramps": curbs,
+      "Steepness":elevationlayer
+    }
+    
+    //Add overlays and filters to map
+    L.control.layers(null, overlayFilter).addTo(map);
 
     // TODO: Actual desired behavior: always try to show your location on the map
     // If button is clicked, ask for current location, then zoom to it.
