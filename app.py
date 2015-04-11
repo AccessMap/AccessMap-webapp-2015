@@ -20,7 +20,7 @@ def index():
     if 'stop_id' in request.args:
         try:
             # TODO: validate input data and don't explode if it's invalid
-            # TODO: This only works for the puget sound region (the 1_ prefix)
+            # TODO: This only works for King County Metro (the 1_ prefix)
             stop_id = "1_" + str(request.args.get('stop_id'))
             # Find the LatLng of the stop's ID
             oba_url = 'http://api.pugetsound.onebusaway.org/api'
@@ -37,9 +37,17 @@ def index():
                            mapbox_token=MAPBOX_TOKEN)
 
 
-@app.route('/report')
+@app.route('/report', methods=['GET'])
 def report():
-    return render_template('report.html')
+    location_args = {'lat': 0, 'lon': 0}
+    if 'lat' in request.args and 'lon' in request.args:
+        try:
+            location_args['lat'] = request.args.get('lat')
+            location_args['lon'] = request.args.get('lon')
+        except:
+            # FIXME: Fail gracefully and catch a proper exception
+            pass
+    return render_template('report.html', location=location_args)
 
 
 @app.route('/report-construction')
@@ -72,9 +80,11 @@ def other():
     return render_template('report-other.html')
 
 
-@app.route('/report-submitted')
+@app.route('/report-submitted', methods=['POST'])
 def submit():
-    return render_template('report-submitted.html')
+    obstacleType=request.form['type']
+    description=request.form['description']
+    return render_template('report-submitted.html', obstacleType=obstacleType, description=description)
 
 
 if __name__ == '__main__':

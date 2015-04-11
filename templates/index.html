@@ -104,9 +104,10 @@
       }
     });
 
-    map.on('contextmenu', function() {
+    map.on('contextmenu', function(e) {
       // TODO: actually show a popup first
-      window.location.href = '{{ url_for("report") }}';
+      console.log(e.latlng); 
+      window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
     });
 
     L.control.locate().addTo(map);

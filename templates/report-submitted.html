@@ -13,7 +13,9 @@
 	    </div>
 
     <script>
-      function returnTimer() {setTimeout(function(){window.location.href = "../maptest";},3000);}
+      function returnTimer() {
+      	setTimeout(function(){window.location.href = '{{ url_for("index") }}';},3000);
+      }
       returnTimer();
     </script>
 {% endblock content %}

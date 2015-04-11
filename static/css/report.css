@@ -1,31 +1,17 @@
-
-
-.container-fluid {
+h3 {
+	width:100%;
 	text-align: center;
 }
 
-.basicpillsmenu {
-	width: 260px;
-}
-
-.basicpillsmenu .nav-pills > li > a {
-      background-color: rgb(25, 117, 209);
-      font-size: 20px;
-      color: #ffffff;
-      text-align: left;
-    }
-
-.basicpillsmenu .nav-pills > li > a:hover {
-      background-color: #009933;
-    }
-
-.row .col-xs-6 .menu-icon {
+.menu-icon {
 	height: 120px;
 	width: 120px;
+	min-height: 120px; 
+	min-height: 120px; 
 	background-repeat: no-repeat;	
     background-position: bottom; 
+    margin-bottom: 10px; 
 }
-
 
 .row .construction-image {
 	background-image: url(../img/construction-sm.png);
@@ -59,7 +45,7 @@
 	margin-bottom: 5px;
 }
 
-.row .menu-icon {
+.menu-icon {
 	background-color: #0052CC;
 	border-color: #4D94FF;
 	border-style: outset;
@@ -68,6 +54,6 @@
 
 }
 
-.container .row .menu-icon:hover {
+.menu-icon:hover {
 	background-color: #4D94FF;
 }
