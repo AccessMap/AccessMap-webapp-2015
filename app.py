@@ -84,8 +84,13 @@ def other():
 def submit():
     obstacleType=request.form['type']
     description=request.form['description']
-    return render_template('report-submitted.html', obstacleType=obstacleType, description=description)
+    lat=request.form['lat']
+    lon=request.form['lon']
+    addToUserReportedDb(obstacleType, description, lat, lon)
+    return render_template('report-submitted.html')
 
+def addToUserReportedDb(obstacleType, description, lat, lon) :
+    pass 
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

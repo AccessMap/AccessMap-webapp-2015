@@ -9,6 +9,8 @@
     <div class="col-xs-10 col-sm-6 col-md-6 col-lg-4">
       <h3>Report Missing Feature</h3>
       <form method="post" action="report-submitted">
+        <input type="hidden" name="lat" value="{{ location['lat'] }}"> 
+        <input type="hidden" name="lon" value="{{ location['lon'] }}"> 
         <div class="form-group">
           <label for="type">Type</label>
           <select class="form-control" id="type" name="type">
