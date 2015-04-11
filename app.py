@@ -90,8 +90,8 @@ def submit():
     return render_template('report-submitted.html')
 
 def addToUserReportedDb(obstacleType, description, lat, lon) :
-    newEntry = r'{"type":"userGenerated","properties":{"type":"'+obstacleType+r'","description":"'+description+r'"},"coordinates":['+lat+r','+lon+r']}'
-    if not os.path.exists(file_path) :
+    newEntry = r'{"type":"Feature","properties":{"type":"'+obstacleType+r'","description":"'+description+r'"},"geometry":{"type":"Point","coordinates":['+lat+r','+lon+r']}}'
+    if not os.path.exists('static/data/userReported.json') :
         f = open('static/data/userReported.json', 'w+')
         f.write("["+newEntry+"]")
         f.close()
