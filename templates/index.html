@@ -33,7 +33,7 @@
 
   <script>
     var FEATUREZOOM = 17;
-    var map = L.map('map', {center: [47.652810, -122.308690], zoom: FEATUREZOOM});
+    var map = L.map('map')
 
     mapbox = L.tileLayer('http://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + {{ mapbox_token|tojson }}, {
       attribution: 'Map data &copy;',
@@ -51,8 +51,6 @@
     var curbs = L.layerGroup({minZoom: 8});
     var userData = L.layerGroup({minZoom: 8});
 
-    // elevations enters the global namespace at some point, don't know why
-
     //Create filter checkboxes for the overlays
     var overlayFilter = {
       "Bus Stops": stops,
@@ -61,25 +59,20 @@
       "User Reported Data": userData
     }
 
-    //Add overlays and filters to map
-    L.control.layers(null, overlayFilter).addTo(map);
-
-    // TODO: Actual desired behavior: always try to show your location on the map
-    // If button is clicked, ask for current location, then zoom to it.
-    {% if 'lat' in location_args and 'lon' in location_args %}
-      var location_info = {{ location_args|tojson }};
-      map.setView([location_info['lat'], location_info['lon']], 16);
-    {% else %}
-      var located = map.locate({setView: false, maxZoom: 16})
-    {% endif %}
-
-    // Read in the elevation data to increase speed later on (generate a promise)
+    // Read in data to increase speed later on (generate a promise)
     userDataDataRequest = $.ajax({
       url: '{{ url_for("static", filename="data/userReported.json") }}'
     });
 
+    map.on('load', function(e) {
+      requestStopsUpdate(stops, map);
+      requestElevationsUpdate(elevationlayer, map, {{ api_url|tojson }});
+      requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
+      requestUserDataUpdate(userData, map);
+    });
+
     map.on('locationfound', function(e) {
-      map.setView([e.latitude, e.longitude], 16);
+      map.setView([e.latitude, e.longitude]);
     });
 
     map.on('moveend', function(e) {
@@ -109,10 +102,21 @@
 
     map.on('contextmenu', function(e) {
       // TODO: actually show a popup first
-      console.log(e.latlng);
       window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
     });
 
+    // TODO: Actual desired behavior: always try to show your location on the map
+    // If button is clicked, ask for current location, then zoom to it.
+    {% if 'lat' in location_args and 'lon' in location_args %}
+      var location_info = {{ location_args|tojson }};
+      map.setView([location_info['lat'], location_info['lon']]);
+    {% else %}
+      map.setView([47.652810, -122.308690], FEATUREZOOM);
+      var located = map.locate({setView: false, maxZoom: 16})
+    {% endif %}
+
+    //Add overlays and filters to map
+    L.control.layers(null, overlayFilter).addTo(map);
     L.control.locate().addTo(map);
 
   </script>

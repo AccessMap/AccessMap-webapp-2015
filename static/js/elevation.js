@@ -45,7 +45,6 @@ function requestElevationsUpdate(layerGroup, map, api_url) {
   }
 
 bounds = map.getBounds().toBBoxString();
-console.log(bounds);
 // Request data
 $.ajax({
   type: 'GET',
