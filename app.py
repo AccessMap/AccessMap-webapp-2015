@@ -8,7 +8,11 @@ app = Flask(__name__, instance_relative_config=True)
 # Get default config (main app dir config.py)
 app.config.from_object('config')
 # Get instance config (hidden from git, is in app dir/instance/config.py)
-app.config.from_pyfile('config.py')
+# It's okay if it's missing
+try:
+    app.config.from_pyfile('config.py')
+except IOError:
+    pass
 # Get keys from the config (not tracked by source)
 OBA_KEY = app.config['OBA_KEY']
 MAPBOX_TOKEN = app.config['MAPBOX_TOKEN']
