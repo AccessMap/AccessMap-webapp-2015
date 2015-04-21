@@ -49,7 +49,7 @@
     var stops = L.layerGroup({minZoom: 8});
     var elevationlayer = L.layerGroup({minZoom: 8});
     var curbs = L.layerGroup({minZoom: 8});
-    var userData = L.layerGroup({minZoom: 8}); 
+    var userData = L.layerGroup({minZoom: 8});
 
     // elevations enters the global namespace at some point, don't know why
 
@@ -57,10 +57,10 @@
     var overlayFilter = {
       "Bus Stops": stops,
       "Curb Ramps": curbs,
-      "Elevation Change":elevationlayer, 
+      "Elevation Change":elevationlayer,
       "User Reported Data":userData
     }
-    
+
     //Add overlays and filters to map
     L.control.layers(null, overlayFilter).addTo(map);
 
@@ -74,14 +74,6 @@
     {% endif %}
 
     // Read in the elevation data to increase speed later on (generate a promise)
-    // TODO: make the sever offer a route for requesting elevation data with
-    // a bbox filter.
-    elevationDataRequest = $.ajax({
-      url: '{{ url_for("static", filename="data/sidewalk-grades-geoJSON-latest.json") }}'
-    });
-    curbDataRequest = $.ajax({
-      url: '{{ url_for("static", filename="data/sdot-sidewalk-curb-geoJSON-latest.json") }}'
-    });
     userDataDataRequest = $.ajax({
       url: '{{ url_for("static", filename="data/userReported.json") }}'
     });
@@ -93,9 +85,9 @@
     map.on('moveend', function(e) {
       if (map.getZoom() >= FEATUREZOOM) {
         requestStopsUpdate(stops, map);
-        requestElevationsUpdate(elevationlayer, map);
-        requestCurbsUpdate(curbs, map);
-        requestUserDataUpdate(userData, map); 
+        requestElevationsUpdate(elevationlayer, map, {{ api_url|tojson }});
+        requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
+        requestUserDataUpdate(userData, map);
       }
     });
 
@@ -109,13 +101,13 @@
         stops.addTo(map);
         elevationlayer.addTo(map);
         curbs.addTo(map);
-        userData.addTo(map); 
+        userData.addTo(map);
       }
     });
 
     map.on('contextmenu', function(e) {
       // TODO: actually show a popup first
-      console.log(e.latlng); 
+      console.log(e.latlng);
       window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
     });
 
