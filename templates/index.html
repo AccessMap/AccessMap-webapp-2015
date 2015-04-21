@@ -33,7 +33,7 @@
 
   <script>
     var FEATUREZOOM = 17;
-    var map = L.map('map', {center: [47.652810, -122.308690], zoom: 16});
+    var map = L.map('map', {center: [47.652810, -122.308690], zoom: FEATUREZOOM});
 
     mapbox = L.tileLayer('http://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + {{ mapbox_token|tojson }}, {
       attribution: 'Map data &copy;',
