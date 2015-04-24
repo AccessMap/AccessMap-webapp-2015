@@ -1,4 +1,5 @@
 function requestUserDataUpdate(layerGroup, map) {
+    
     var constructionIcon = L.icon({
       iconUrl: '../static/img/construction.png',
       iconSize: [30, 30],
@@ -19,7 +20,9 @@ function requestUserDataUpdate(layerGroup, map) {
       iconSize: [30, 30],
       iconAnchor: [10, 0]
     });
+
   function drawUserData(data) {
+    
     var marker; 
     // TODO: turn this into map tiles for several zoom levels to speed
     // things up (slowness is due to drawing so many lines)
