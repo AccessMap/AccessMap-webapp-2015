@@ -30,10 +30,9 @@
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/userreporteddata.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/elevators.js') }}"></script>
   <script src="{{ url_for('static', filename='js/constructiondata.js') }}"></script>
 
-  
-  
   <script>
     var FEATUREZOOM = 17;
     var map = L.map('map')
@@ -52,13 +51,16 @@
     var stops = L.layerGroup({minZoom: 8});
     var elevationlayer = L.layerGroup({minZoom: 8});
     var curbs = L.layerGroup({minZoom: 8});
-    var userData = L.layerGroup({minZoom: 8});
+    var userData = L.layerGroup({minZoom: 8}); 
+    var elevators = L.layerGroup({minZoom: 8}); 
     var constructionData = L.layerGroup({minZoom: 8});
 
     //Create filter checkboxes for the overlays
     var overlayFilter = {
       "Bus Stops": stops,
       "Curb Ramps": curbs,
+      "User Reported Data":userData, 
+      "Elevators":elevators,
       "Elevation Change": elevationlayer,
       "Sidewalk Closures (beta)": constructionData,
       "User Reported Data": userData
@@ -67,6 +69,9 @@
     // Read in data to increase speed later on (generate a promise)
     userDataDataRequest = $.ajax({
       url: '{{ url_for("static", filename="data/userReported.json") }}'
+    });
+    elevatorDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/elevators.json") }}'
     });
 
     constructionDataRequest = $.ajax({
@@ -79,6 +84,7 @@
       requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
       requestUserDataUpdate(userData, map);
       requestConstructionUpdate(constructionData, map);
+      requestElevatorUpdate(elevators, map);
     });
 
     map.on('locationfound', function(e) {
@@ -92,6 +98,7 @@
         requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
         requestUserDataUpdate(userData, map);
         requestConstructionUpdate(constructionData, map);
+        requestElevatorUpdate(elevators, map);
       }
     });
 
@@ -101,12 +108,14 @@
         map.removeLayer(elevationlayer);
         map.removeLayer(curbs);
         map.removeLayer(userData);
+        map.removeLayer(elevators);
         elevationTiles.addTo(map);
       } else {
         stops.addTo(map);
         elevationlayer.addTo(map);
         curbs.addTo(map);
         userData.addTo(map);
+        elevators.addTo(map); 
         map.removeLayer(elevationTiles);
       }
     });
