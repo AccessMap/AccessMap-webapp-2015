@@ -60,7 +60,10 @@ Hackcessible is based on the Flask web framework using python 2.7. A list of pip
 * requests >= 2.6.0
 
 To run the app:
-1. Set a OneBusAway API Key and a Mapbox API Token. These can be defined either as environment variables `OBA_KEY` and `MAPBOX_TOKEN` or as config variables of the same name in instance/config.py (the latter will take precedence - if both environment variables and the config are present, the config's values are used).
+1. Set a Mapbox API Token, OneBusAway API Key, and the location of the hackcessibleapi site. These can be defined either as environment variables or as config variables of the same name in instance/config.py (the latter will take precedence - if both environment variables and the config are present, the config's values are used). The variables have these titles:
+    MAPBOX_TOKEN
+    OBA_KEY
+    API_URL
 2. Get the elevation and sidewalk data. To save on bandwidth, requests, and client-side computation, we do not query Google Maps or the SDOT data set on the client side (javascript) and instead store the preprocessed data on the server. It is currently not tracked in git and must be downloaded separately (contact one of the contributors to get it). We are quickly moving to having a RESTful API to make accessing the data easier.
 3. Run `python app.py`. This will use the Werkzeug server, which should not be used in production. We do not currently use gunicorn (as much is in flux), but will do so in the future.
 

@@ -1,6 +1,12 @@
 import os
 
 
+# Override these settings with an instance/config.py file
+MAPBOX_TOKEN = ""
+OBA_KEY = ""
+API_URL = ""
+
+
 try:
     MAPBOX_TOKEN = os.environ['MAPBOX_TOKEN']
 except KeyError:
