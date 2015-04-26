@@ -70,7 +70,7 @@
     userDataDataRequest = $.ajax({
       url: '{{ url_for("static", filename="data/userReported.json") }}'
     });
-    elevatorsDataRequest = $.ajax({
+    elevatorDataRequest = $.ajax({
       url: '{{ url_for("static", filename="data/elevators.json") }}'
     });
 
@@ -84,6 +84,7 @@
       requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
       requestUserDataUpdate(userData, map);
       requestConstructionUpdate(constructionData, map);
+      requestElevatorUpdate(elevators, map);
     });
 
     map.on('locationfound', function(e) {
@@ -97,6 +98,7 @@
         requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
         requestUserDataUpdate(userData, map);
         requestConstructionUpdate(constructionData, map);
+        requestElevatorUpdate(elevators, map);
       }
     });
 
@@ -106,12 +108,14 @@
         map.removeLayer(elevationlayer);
         map.removeLayer(curbs);
         map.removeLayer(userData);
+        map.removeLayer(elevators);
         elevationTiles.addTo(map);
       } else {
         stops.addTo(map);
         elevationlayer.addTo(map);
         curbs.addTo(map);
         userData.addTo(map);
+        elevators.addTo(map); 
         map.removeLayer(elevationTiles);
       }
     });

@@ -4,7 +4,7 @@ function requestElevatorUpdate(layerGroup, map) {
       iconSize: [30, 30],
       iconAnchor: [10, 0]
     });
-  function drawUserData(data) {
+  function drawElevatorData(data) {
     var marker; 
     // TODO: turn this into map tiles for several zoom levels to speed
     // things up (slowness is due to drawing so many lines)
