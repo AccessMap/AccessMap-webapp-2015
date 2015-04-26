@@ -30,6 +30,7 @@
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/userreporteddata.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/elevators.js') }}"></script>
 
   <script>
     var FEATUREZOOM = 17;
@@ -50,6 +51,7 @@
     var elevationlayer = L.layerGroup({minZoom: 8});
     var curbs = L.layerGroup({minZoom: 8});
     var userData = L.layerGroup({minZoom: 8}); 
+    var elevators = L.layerGroup({minZoom: 8}); 
 
     // elevations enters the global namespace at some point, don't know why
 
@@ -58,7 +60,8 @@
       "Bus Stops": stops,
       "Curb Ramps": curbs,
       "Elevation Change":elevationlayer, 
-      "User Reported Data":userData
+      "User Reported Data":userData, 
+      "Elevators":elevators
     }
     
     //Add overlays and filters to map
@@ -84,6 +87,9 @@
     });
     userDataDataRequest = $.ajax({
       url: '{{ url_for("static", filename="data/userReported.json") }}'
+    });
+    userDataDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/elevators.json") }}'
     });
 
     map.on('locationfound', function(e) {
