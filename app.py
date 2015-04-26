@@ -8,10 +8,15 @@ app = Flask(__name__, instance_relative_config=True)
 # Get default config (main app dir config.py)
 app.config.from_object('config')
 # Get instance config (hidden from git, is in app dir/instance/config.py)
-app.config.from_pyfile('config.py')
+# It's okay if it's missing
+try:
+    app.config.from_pyfile('config.py')
+except IOError:
+    pass
 # Get keys from the config (not tracked by source)
 OBA_KEY = app.config['OBA_KEY']
 MAPBOX_TOKEN = app.config['MAPBOX_TOKEN']
+API_URL = app.config['API_URL']
 
 
 @app.route('/', methods=['GET'])
@@ -34,7 +39,7 @@ def index():
             pass
 
     return render_template('index.html', location_args=location_args,
-                           mapbox_token=MAPBOX_TOKEN)
+                           mapbox_token=MAPBOX_TOKEN, api_url=API_URL)
 
 
 @app.route('/report', methods=['GET'])
@@ -82,23 +87,29 @@ def other():
 
 @app.route('/report-submitted', methods=['POST'])
 def submit():
-    obstacleType=request.form['type']
-    description=request.form['description']
-    lat=request.form['lat']
-    lon=request.form['lon']
+    obstacleType = request.form['type']
+    description = request.form['description']
+    lat = request.form['lat']
+    lon = request.form['lon']
     addToUserReportedDb(obstacleType, description, lat, lon)
     return render_template('report-submitted.html')
 
-def addToUserReportedDb(obstacleType, description, lat, lon) :
-    newEntry = r'{"type":"Feature","properties":{"type":"'+obstacleType+r'","description":"'+description+r'"},"geometry":{"type":"Point","coordinates":['+lon+r','+lat+r']}}'
-    if not os.path.exists('static/data/userReported.json') :
+
+def addToUserReportedDb(obstacleType, description, lat, lon):
+    new_entry = {'type': 'Feature',
+                 'properties': {'type': obstacleType,
+                                'description': description},
+                 'geometry': {'type': 'Point',
+                              'coordinates': [lon, lat]}}
+    new_entry_s = str(new_entry)
+    if not os.path.exists('static/data/userReported.json'):
         f = open('static/data/userReported.json', 'w+')
-        f.write("["+newEntry+"]")
+        f.write("["+new_entry_s+"]")
         f.close()
-    else :
+    else:
         f = open('static/data/userReported.json', 'r+')
-        f.seek(-1, 2) #write over the previous ] 
-        f.write(","+newEntry+"]")
+        f.seek(-1, 2)  # write over the previous ]
+        f.write(","+new_entry_s+"]")
         f.close()
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-function requestElevationsUpdate(layerGroup, map) {
+function requestElevationsUpdate(layerGroup, map, api_url) {
   // Gradations
   var high = 0.05;
   var mid = 0.01;
@@ -36,7 +36,7 @@ function requestElevationsUpdate(layerGroup, map) {
         });
 
         //Display info when user clicks on the line
-        var popup = L.popup().setContent("<b>Elevation Change is " + steepness);
+        var popup = L.popup().setContent("<b>Elevation Change is " + steepness + "<br>" + coord1 + " " + coord2);
         line.bindPopup(popup);
 
         layerGroup.addLayer(line);
@@ -44,7 +44,17 @@ function requestElevationsUpdate(layerGroup, map) {
     }
   }
 
-$.when(elevationDataRequest).done(function(data) {
-  drawElevations(data);
+bounds = map.getBounds().toBBoxString();
+// Request data
+$.ajax({
+  type: 'GET',
+  url: api_url + '/sidewalks.json',
+  data: {
+    bbox: bounds
+  },
+  dataType: 'json',
+  success: function(data) {
+    drawElevations(data);
+  }
 });
 }
