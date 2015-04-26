@@ -52,11 +52,9 @@ We made use of:
 ## Contributing
 
 #### Installation and Setup
-Hackcessible is based on the Flask web framework using python 2.7. A list of pip-installable requirements is listed in requirements.txt and include:
+Hackcessible is based on the Flask web framework using python 2.7. requirements.txt contains the list of pip-installable requirements:
 * Flask >= 0.10
 * Flask-WTF >= 0.11
-* Flask-SQLAlchemy >= 2.0
-* gunicorn >= 19.0
 * requests >= 2.6.0
 
 To run the app:
