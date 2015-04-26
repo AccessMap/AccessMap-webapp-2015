@@ -60,7 +60,7 @@
       "Bus Stops": stops,
       "Curb Ramps": curbs,
       "User Reported Data":userData, 
-      "Elevators":elevators
+      "Elevators":elevators,
       "Elevation Change": elevationlayer,
       "Sidewalk Closures": constructionData,
       "User Reported Data": userData
@@ -70,7 +70,7 @@
     userDataDataRequest = $.ajax({
       url: '{{ url_for("static", filename="data/userReported.json") }}'
     });
-    userDataDataRequest = $.ajax({
+    elevatorsDataRequest = $.ajax({
       url: '{{ url_for("static", filename="data/elevators.json") }}'
     });
 
