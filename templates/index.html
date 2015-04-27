@@ -115,7 +115,10 @@
 
     map.on('contextmenu', function(e) {
       // TODO: actually show a popup first
-      window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
+      var popup = confirm("Do you want to report a new obstacle?");
+      if (popup == true) {
+          window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
+      }
     });
 
     {% if 'lat' in location_args and 'lon' in location_args %}
