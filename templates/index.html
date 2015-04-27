@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% block head %}
   {{ super() }}
-  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.css' rel='stylesheet' />
-  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/L.Control.Locate.scss') }}"/>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.css' rel='stylesheet' />
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
     <style>
     body {
       padding: 0;
@@ -23,9 +21,9 @@
 
 {% block script %}
   {{ super() }}
-  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.js'></script>
-  <script src="{{ url_for('static', filename='js/L.Control.Locate.js') }}"></script>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.js'></script>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.js'></script>
+  <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.css"/>
   <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
@@ -115,10 +113,6 @@
       }
     });
 
-    map.on('locationfound', function(e) {
-      map.setView([e.latitude, e.longitude]);
-    });
-
     map.on('contextmenu', function(e) {
       // TODO: actually show a popup first
       window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
@@ -132,8 +126,8 @@
     {% endif %}
 
     //Add overlays and filters to map
-    L.control.layers(null, overlayMaps).addTo(map);
     L.control.locate().addTo(map);
+    L.control.layers(null, overlayMaps).addTo(map);
 
   </script>
 {% endblock %}
