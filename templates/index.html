@@ -47,12 +47,12 @@
     });
     elevationTiles.addTo(map);
 
-    var stops = L.layerGroup({minZoom: 8});
-    var elevationlayer = L.layerGroup({minZoom: 8});
-    var curbs = L.layerGroup({minZoom: 8});
-    var userData = L.layerGroup({minZoom: 8});
-    var elevators = L.layerGroup({minZoom: 8});
-    var constructionData = L.layerGroup({minZoom: 8});
+    var stops = L.featureGroup({minZoom: 8});
+    var elevationlayer = L.featureGroup({minZoom: 8});
+    var curbs = L.featureGroup({minZoom: 8});
+    var userData = L.featureGroup({minZoom: 8});
+    var elevators = L.featureGroup({minZoom: 8});
+    var constructionData = L.featureGroup({minZoom: 8});
 
     //Create filter checkboxes for the overlays
     var overlayMaps = {
@@ -132,9 +132,9 @@
     L.control.locate().addTo(map);
     L.control.layers(null, overlayMaps).addTo(map);
 
-    L.easyButton('fa-plus', 
+    L.easyButton('fa-plus',
               function (){
-                var popup = alert("To add new obstacles to the map, long-press (or right-click on desktop) the location of the obstacle and follow the prompts."); 
+                var popup = alert("To add new obstacles to the map, long-press (or right-click on desktop) the location of the obstacle and follow the prompts.");
               },
              'Interact with the document'
             );
