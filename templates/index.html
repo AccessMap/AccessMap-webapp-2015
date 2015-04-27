@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block head %}
   {{ super() }}
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.css' rel='stylesheet' />
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/L.Control.Locate.scss') }}"/>
@@ -19,61 +20,80 @@
 {% block content %}
   <div id="map"></div>
 {% endblock %}
+
 {% block script %}
   {{ super() }}
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.js'></script>
   <script src="{{ url_for('static', filename='js/L.Control.Locate.js') }}"></script>
   <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/userreporteddata.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/elevators.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/constructiondata.js') }}"></script>
 
   <script>
-    var map = L.map('map', {center: [47.652810, -122.308690], zoom: 16});
-    var FEATUREZOOM = 15;
+    var FEATUREZOOM = 17;
+    var map = L.map('map')
 
     mapbox = L.tileLayer('http://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + {{ mapbox_token|tojson }}, {
       attribution: 'Map data &copy;',
       maxZoom: 18
     });
+    mapbox.addTo(map);
+
+    elevationTiles = L.mapbox.tileLayer('nbolten.3d42b895', {
+      accessToken: {{ mapbox_token|tojson }}
+    });
+    elevationTiles.addTo(map);
 
     var stops = L.layerGroup({minZoom: 8});
     var elevationlayer = L.layerGroup({minZoom: 8});
     var curbs = L.layerGroup({minZoom: 8});
+    var userData = L.layerGroup({minZoom: 8});
+    var elevators = L.layerGroup({minZoom: 8});
+    var constructionData = L.layerGroup({minZoom: 8});
 
-    mapbox.addTo(map);
-    stops.addTo(map);
-    // elevations enters the global namespace at some point, don't know why
-    elevationlayer.addTo(map);
-    curbs.addTo(map);
+    //Create filter checkboxes for the overlays
+    var overlayMaps = {
+      "Bus Stops": stops,
+      "Curb Ramps": curbs,
+      "User Reported Data":userData,
+      "Elevators":elevators,
+      "Elevation Change": elevationlayer,
+      "Sidewalk Closures (beta)": constructionData,
+      "User Reported Data": userData
+    }
 
-    // TODO: Actual desired behavior: always try to show your location on the map
-    // If button is clicked, ask for current location, then zoom to it.
-    {% if 'lat' in location_args and 'lon' in location_args %}
-      var location_info = {{ location_args|tojson }};
-      map.setView([location_info['lat'], location_info['lon']], 16);
-    {% else %}
-      var located = map.locate({setView: false, maxZoom: 16})
-    {% endif %}
-
-    // Read in the elevation data to increase speed later on (generate a promise)
-    // TODO: make the sever offer a route for requesting elevation data with
-    // a bbox filter.
-    elevationDataRequest = $.ajax({
-      url: '{{ url_for("static", filename="data/sidewalk-grades-geoJSON-latest.json") }}'
+    // Read in data to increase speed later on (generate a promise)
+    userDataDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/userReported.json") }}'
     });
-    curbDataRequest = $.ajax({
-      url: '{{ url_for("static", filename="data/sdot-sidewalk-curb-geoJSON-latest.json") }}'
+    elevatorDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/elevators.json") }}'
     });
 
-    map.on('locationfound', function(e) {
-      map.setView([e.latitude, e.longitude], 16);
+    constructionDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/sdot-sidewalk-closed-by-address.json") }}'
+    });
+
+    updateLayers = function() {
+      requestStopsUpdate(stops, map);
+      requestElevationsUpdate(elevationlayer, map, {{ api_url|tojson }});
+      requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
+      requestUserDataUpdate(userData, map);
+      requestConstructionUpdate(constructionData, map);
+      requestElevatorUpdate(elevators, map);
+    }
+
+    map.on('load', function(e) {
+      updateLayers();
     });
 
     map.on('moveend', function(e) {
       if (map.getZoom() >= FEATUREZOOM) {
-        requestStopsUpdate(stops, map);
-        requestElevationsUpdate(elevationlayer, map);
-        requestCurbsUpdate(curbs, map);
+        updateLayers();
       }
     });
 
@@ -82,18 +102,37 @@
         map.removeLayer(stops);
         map.removeLayer(elevationlayer);
         map.removeLayer(curbs);
+        map.removeLayer(userData);
+        map.removeLayer(elevators);
+        elevationTiles.addTo(map);
       } else {
         stops.addTo(map);
         elevationlayer.addTo(map);
         curbs.addTo(map);
+        userData.addTo(map);
+        elevators.addTo(map);
+        map.removeLayer(elevationTiles);
       }
     });
 
-    map.on('contextmenu', function() {
-      // TODO: actually show a popup first
-      window.location.href = '{{ url_for("report") }}';
+    map.on('locationfound', function(e) {
+      map.setView([e.latitude, e.longitude]);
     });
 
+    map.on('contextmenu', function(e) {
+      // TODO: actually show a popup first
+      window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
+    });
+
+    {% if 'lat' in location_args and 'lon' in location_args %}
+      var location_info = {{ location_args|tojson }};
+      map.setView([location_info['lat'], location_info['lon']]);
+    {% else %}
+      map.setView([47.652810, -122.308690], FEATUREZOOM);
+    {% endif %}
+
+    //Add overlays and filters to map
+    L.control.layers(null, overlayMaps).addTo(map);
     L.control.locate().addTo(map);
 
   </script>

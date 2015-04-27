@@ -1,4 +1,4 @@
-function requestCurbsUpdate(layerGroup, map) {
+function requestCurbsUpdate(layerGroup, map, api_url) {
   function drawCurbs(data) {
     // TODO: turn this into map tiles for several zoom levels to speed
     // things up (slowness is due to drawing so many lines)
@@ -17,12 +17,27 @@ function requestCurbsUpdate(layerGroup, map) {
             })
           }
         });
+
+        //Display info when user clicks on the curb marker
+        var popup = L.popup().setContent("<b>Curb Ramp</b>");
+        point.bindPopup(popup);
+
         layerGroup.addLayer(point);
       }
     }
   }
 
-$.when(curbDataRequest).done(function(data) {
-  drawCurbs(data);
+bounds = map.getBounds().toBBoxString();
+// Request data
+$.ajax({
+  type: 'GET',
+  url: api_url + '/curbs.json',
+  data: {
+    bbox: bounds
+  },
+  dataType: 'json',
+  success: function(data) {
+    drawCurbs(data);
+  }
 });
 }
