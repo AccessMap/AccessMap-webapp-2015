@@ -24,6 +24,7 @@
   <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.js'></script>
   <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.js'></script>
   <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.css"/>
+  <script src="{{ url_for('static', filename='js/easy-button.js') }}"></script>
   <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
@@ -114,7 +115,6 @@
     });
 
     map.on('contextmenu', function(e) {
-      // TODO: actually show a popup first
       var popup = confirm("Do you want to report a new obstacle?");
       if (popup == true) {
           window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
@@ -131,6 +131,13 @@
     //Add overlays and filters to map
     L.control.locate().addTo(map);
     L.control.layers(null, overlayMaps).addTo(map);
+
+    L.easyButton('fa-plus', 
+              function (){
+                var popup = alert("To add new obstacles to the map, long-press (or right-click on desktop) the location of the obstacle and follow the prompts."); 
+              },
+             'Interact with the document'
+            );
 
   </script>
 {% endblock %}
