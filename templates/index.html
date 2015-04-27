@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block head %}
   {{ super() }}
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.css' rel='stylesheet' />
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/L.Control.Locate.scss') }}"/>
-  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.css' rel='stylesheet' />
     <style>
     body {
       padding: 0;
@@ -51,15 +51,15 @@
     var stops = L.layerGroup({minZoom: 8});
     var elevationlayer = L.layerGroup({minZoom: 8});
     var curbs = L.layerGroup({minZoom: 8});
-    var userData = L.layerGroup({minZoom: 8}); 
-    var elevators = L.layerGroup({minZoom: 8}); 
+    var userData = L.layerGroup({minZoom: 8});
+    var elevators = L.layerGroup({minZoom: 8});
     var constructionData = L.layerGroup({minZoom: 8});
 
     //Create filter checkboxes for the overlays
-    var overlayFilter = {
+    var overlayMaps = {
       "Bus Stops": stops,
       "Curb Ramps": curbs,
-      "User Reported Data":userData, 
+      "User Reported Data":userData,
       "Elevators":elevators,
       "Elevation Change": elevationlayer,
       "Sidewalk Closures (beta)": constructionData,
@@ -78,27 +78,22 @@
       url: '{{ url_for("static", filename="data/sdot-sidewalk-closed-by-address.json") }}'
     });
 
-    map.on('load', function(e) {
+    updateLayers = function() {
       requestStopsUpdate(stops, map);
       requestElevationsUpdate(elevationlayer, map, {{ api_url|tojson }});
       requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
       requestUserDataUpdate(userData, map);
       requestConstructionUpdate(constructionData, map);
       requestElevatorUpdate(elevators, map);
-    });
+    }
 
-    map.on('locationfound', function(e) {
-      map.setView([e.latitude, e.longitude]);
+    map.on('load', function(e) {
+      updateLayers();
     });
 
     map.on('moveend', function(e) {
       if (map.getZoom() >= FEATUREZOOM) {
-        requestStopsUpdate(stops, map);
-        requestElevationsUpdate(elevationlayer, map, {{ api_url|tojson }});
-        requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
-        requestUserDataUpdate(userData, map);
-        requestConstructionUpdate(constructionData, map);
-        requestElevatorUpdate(elevators, map);
+        updateLayers();
       }
     });
 
@@ -115,9 +110,13 @@
         elevationlayer.addTo(map);
         curbs.addTo(map);
         userData.addTo(map);
-        elevators.addTo(map); 
+        elevators.addTo(map);
         map.removeLayer(elevationTiles);
       }
+    });
+
+    map.on('locationfound', function(e) {
+      map.setView([e.latitude, e.longitude]);
     });
 
     map.on('contextmenu', function(e) {
@@ -125,18 +124,15 @@
       window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
     });
 
-    // TODO: Actual desired behavior: always try to show your location on the map
-    // If button is clicked, ask for current location, then zoom to it.
     {% if 'lat' in location_args and 'lon' in location_args %}
       var location_info = {{ location_args|tojson }};
       map.setView([location_info['lat'], location_info['lon']]);
     {% else %}
       map.setView([47.652810, -122.308690], FEATUREZOOM);
-      var located = map.locate({setView: false, maxZoom: 16})
     {% endif %}
 
     //Add overlays and filters to map
-    L.control.layers(null, overlayFilter).addTo(map);
+    L.control.layers(null, overlayMaps).addTo(map);
     L.control.locate().addTo(map);
 
   </script>

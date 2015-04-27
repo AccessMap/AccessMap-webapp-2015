@@ -5,14 +5,15 @@ from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__, instance_relative_config=True)
-# Get default config (main app dir config.py)
+# Get default config (main app dir config.py) or environment variables
 app.config.from_object('config')
 # Get instance config (hidden from git, is in app dir/instance/config.py)
-# It's okay if it's missing
+# Overrides default config.py and environment variables settings
 try:
     app.config.from_pyfile('config.py')
 except IOError:
     pass
+
 # Get keys from the config (not tracked by source)
 OBA_KEY = app.config['OBA_KEY']
 MAPBOX_TOKEN = app.config['MAPBOX_TOKEN']
@@ -24,8 +25,10 @@ def index():
     location_args = {}
     if 'stop_id' in request.args:
         try:
-            # TODO: validate input data and don't explode if it's invalid
-            # TODO: This only works for King County Metro (the 1_ prefix)
+            # TODO: Make this happen in javascript - pass the argument
+            # to the template and do an AJAX request
+
+            # HACK: This only works for King County Metro (the 1_ prefix)
             stop_id = "1_" + str(request.args.get('stop_id'))
             # Find the LatLng of the stop's ID
             oba_url = 'http://api.pugetsound.onebusaway.org/api'
