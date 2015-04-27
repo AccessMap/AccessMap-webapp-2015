@@ -3,6 +3,8 @@
   {{ super() }}
   <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.css' rel='stylesheet' />
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet-search.css') }}"/>
     <style>
     body {
       padding: 0;
@@ -23,7 +25,8 @@
   {{ super() }}
   <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.js'></script>
   <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.js'></script>
-  <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.css"/>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+  <script src="{{ url_for('static', filename='js/leaflet-search.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
@@ -125,9 +128,43 @@
       map.setView([47.652810, -122.308690], FEATUREZOOM);
     {% endif %}
 
-    //Add overlays and filters to map
+    // Add geocoder
+    var geocoder = new google.maps.Geocoder();
+    function filterJSONCall(rawJson) {
+      var json = {},
+          key  = [],
+          loc  = [],
+          disp = [];
+
+      for (var item in rawJson) {
+        key = rawJson[item].formatted_address;
+        loc = L.latLng(rawJson[item].geometry.location.lat(), rawJson[item].geometry.location.lng());
+        json[key] = loc;
+      }
+
+      return json;
+    }
+    searchControl = new L.Control.Search({
+                      callData: function(text, callResponse) {
+                        geocoder.geocode({address: text,
+                                          componentRestrictions: {
+                                            country: 'US',
+                                            locality: 'Seattle'
+                                          }
+                                         },
+                                         callResponse);
+                      },
+                      filterJSON: filterJSONCall,
+                      markerLocation: true,
+                      autoType: false,
+                      autoCollapse: true,
+                      minLength: 2,
+                    });
+    // Add controls to map
+    map.addControl(searchControl);
     L.control.locate().addTo(map);
     L.control.layers(null, overlayMaps).addTo(map);
+
 
   </script>
 {% endblock %}
