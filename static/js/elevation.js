@@ -1,7 +1,7 @@
 function requestElevationsUpdate(layerGroup, map, api_url) {
   // Gradations
-  var high = 0.05;
-  var mid = 0.01;
+  var high = 0.0833;
+  var mid = 0.05;
 
   function drawElevations(data) {
     // TODO: turn this into map tiles for several zoom levels to speed
