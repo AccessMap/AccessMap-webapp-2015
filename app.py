@@ -98,7 +98,7 @@ def submit():
     description = request.form['description']
     lat = request.form['lat']
     lon = request.form['lon']
-    addToUserReportedDb(obstacleType, description, lat, lon)
+    #addToUserReportedDb(obstacleType, description, lat, lon)
     return render_template('report-submitted.html')
 
 
