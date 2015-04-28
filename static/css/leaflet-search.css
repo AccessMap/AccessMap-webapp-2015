@@ -13,6 +13,7 @@
 
 .leaflet-control-search.search-exp {/*expanded*/
 	background: #fff;
+    width: 200px;
 }
 .leaflet-control-search .search-input {
 	display:block;
@@ -20,7 +21,8 @@
 	background: #fff;
 	border:1px solid #666;
 	border-radius:2px;
-	height:18px;
+	height: 22px;
+    width: 165px;
 	padding:0 18px 0 2px;
 	margin:3px 0 3px 3px;
 }
