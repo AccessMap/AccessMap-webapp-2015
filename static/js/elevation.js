@@ -36,7 +36,7 @@ function requestElevationsUpdate(layerGroup, map, api_url) {
         });
 
         //Display info when user clicks on the line
-        var popup = L.popup().setContent("<b>Elevation Change is " + steepness + "<br>" + coord1 + " " + coord2);
+        var popup = L.popup().setContent("<b>Elevation Change is " + steepness);
         line.bindPopup(popup);
 
         layerGroup.addLayer(line);
