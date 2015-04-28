@@ -33,8 +33,8 @@
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/userreporteddata.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/elevators.js') }}"></script>
   <script src="{{ url_for('static', filename='js/constructiondata.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/elevators.js') }}"></script>
 
   <script>
     var FEATUREZOOM = 17;
@@ -78,7 +78,7 @@
     });
 
     constructionDataRequest = $.ajax({
-      url: '{{ url_for("static", filename="data/sdot-sidewalk-closed-by-address.json") }}'
+      url: '{{ url_for("static", filename="data/condensed-sidewalk-closure.json") }}'
     });
 
     updateLayers = function() {
