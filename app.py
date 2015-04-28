@@ -20,8 +20,12 @@ MAPBOX_TOKEN = app.config['MAPBOX_TOKEN']
 API_URL = app.config['API_URL']
 
 
-@app.route('/', methods=['GET'])
-def index():
+@app.route('/')
+def index(): 
+    return render_template('index.html')
+
+@app.route('/map', methods=['GET'])
+def map():
     location_args = {}
     if 'stop_id' in request.args:
         try:
@@ -41,7 +45,7 @@ def index():
             # FIXME: Fail gracefully and catch a proper exception
             pass
 
-    return render_template('index.html', location_args=location_args,
+    return render_template('map.html', location_args=location_args,
                            mapbox_token=MAPBOX_TOKEN, api_url=API_URL)
 
 
@@ -94,7 +98,7 @@ def submit():
     description = request.form['description']
     lat = request.form['lat']
     lon = request.form['lon']
-    addToUserReportedDb(obstacleType, description, lat, lon)
+    #addToUserReportedDb(obstacleType, description, lat, lon)
     return render_template('report-submitted.html')
 
 
