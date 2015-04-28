@@ -1,6 +1,5 @@
 function requestConstructionUpdate(layerGroup, map) {
-  console.log("That's right, Bob, I'm here in the const update function.")
-  
+
   var constructionIcon = L.icon({
       iconUrl: '../static/img/construction.png',
       iconSize: [30, 30],
@@ -12,7 +11,7 @@ function requestConstructionUpdate(layerGroup, map) {
   //  console.log("Regarding Construction Data, the foreman had this to say: " + data);
  // });
 
-  
+
 
   //var hr = new XMLHttpRequest();
   //hr.open("GET", '{{ url_for("static", filename="data/sdot-sidewalk-closure.json") }}', true);
@@ -34,16 +33,13 @@ function requestConstructionUpdate(layerGroup, map) {
 
    function drawSidewalkClosures(data) {
 
-    
-     console.log("Things are getting exciting around here, Bob.  They just called for the metadata!");
 
 
-     
+
+
     /* var bool = false;
      for (var obj in dataset.data){
-      console.log("I seem to be in some kind of vortex, Bob.");
       if (!bool){
-        console.log("Here comes an object now, Bob: " + JSON.stringify(JSON.parse(obj)));
         var testyMcGee = obj[0];
         var cuz = testyMcGee[0];
         console.log("Let's hear what it has to tell us.  Testy? " + JSON.stringify(testyMcGee));
@@ -62,7 +58,7 @@ function requestConstructionUpdate(layerGroup, map) {
     var bounds = map.getBounds();
     //console.log("These are the bounds: " + bounds.toBBoxString());
     //console.log("Data.length seems to be " + data.data.length);
-    
+
     for (i = 0; i < data.data.length; i++) {
       /*var permit = JSON.stringify(data.data[i]);
       var thing = permit[0];
@@ -75,21 +71,21 @@ function requestConstructionUpdate(layerGroup, map) {
 //      console.log("permit: " + permit);
 //      console.log("shape array: " + shapeArray);
      // console.log("Latlng: " + latlng);
-      
+
       var boolz = bounds.contains(latlng);
       //console.log("We're receiving word from Boolz right now.  Boolz? " + boolz);
        if (boolz) {
         //console.log("That confirms what boolz told us earlier.");
         var description = permit[24];
 
-        if (description != null && description.indexOf("SIDEWALK") > -1 && 
+        if (description != null && description.indexOf("SIDEWALK") > -1 &&
           description.indexOf("NO MOBILITY IMPACT") < 0){
           marker = L.marker(latlng, {icon: constructionIcon});
           var popup = L.popup().setContent("<b>Sidewalk May Be Closed</b><br>Address: " + permit[20] + "<br>Details: " + permit[24] + "<br>");
           if (permit[24] != null){
-            console.log(permit[24]);  
+            console.log(permit[24]);
           }
-          
+
           marker.bindPopup(popup);
 
           layerGroup.addLayer(marker);
@@ -99,7 +95,7 @@ function requestConstructionUpdate(layerGroup, map) {
 
          //marker = L.geoJson(geoJSON, {
           //   pointToLayer: function(feature, latlng) {
-         
+
            //    return L.marker(latlng, {icon: constructionIcon});
            //  }
 //           });
@@ -115,7 +111,7 @@ function requestConstructionUpdate(layerGroup, map) {
 
     console.log("Whshew.  Made it out of that one okay.  I'll see you back in the studio.");
   }
-   
+
 
  $.when(constructionDataRequest).done(function(data) {
    drawSidewalkClosures(data);

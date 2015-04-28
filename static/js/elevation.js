@@ -55,6 +55,7 @@ $.ajax({
   dataType: 'json',
   success: function(data) {
     drawElevations(data);
+    layerGroup.bringToBack();
   }
 });
 }
