@@ -92,6 +92,7 @@
 
     map.on('load', function(e) {
       updateLayers();
+      map.locate({setView: true, maxZoom: FEATUREZOOM})
     });
 
     map.on('moveend', function(e) {
