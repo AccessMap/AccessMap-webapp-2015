@@ -49,3 +49,7 @@ input[type='checkbox']:checked {
 	padding:10px;
 	margin-top: 10px;
 }
+
+#add-button {
+	padding: 7px;
+}

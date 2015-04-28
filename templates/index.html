@@ -27,6 +27,8 @@
   <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.js'></script>
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
   <script src="{{ url_for('static', filename='js/leaflet-search.min.js') }}"></script>
+  <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.css"/>
+  <script src="{{ url_for('static', filename='js/easy-button.js') }}"></script>
   <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
@@ -49,12 +51,12 @@
     });
     elevationTiles.addTo(map);
 
-    var stops = L.layerGroup({minZoom: 8});
-    var elevationlayer = L.layerGroup({minZoom: 8});
-    var curbs = L.layerGroup({minZoom: 8});
-    var userData = L.layerGroup({minZoom: 8});
-    var elevators = L.layerGroup({minZoom: 8});
-    var constructionData = L.layerGroup({minZoom: 8});
+    var stops = L.featureGroup({minZoom: 8});
+    var elevationlayer = L.featureGroup({minZoom: 8});
+    var curbs = L.featureGroup({minZoom: 8});
+    var userData = L.featureGroup({minZoom: 8});
+    var elevators = L.featureGroup({minZoom: 8});
+    var constructionData = L.featureGroup({minZoom: 8});
 
     //Create filter checkboxes for the overlays
     var overlayMaps = {
@@ -117,8 +119,10 @@
     });
 
     map.on('contextmenu', function(e) {
-      // TODO: actually show a popup first
-      window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
+      var popup = confirm("Do you want to report a new obstacle?");
+      if (popup == true) {
+          window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
+      }
     });
 
     {% if 'lat' in location_args and 'lon' in location_args %}
@@ -166,6 +170,15 @@
     L.control.locate().addTo(map);
     L.control.layers(null, overlayMaps).addTo(map);
 
+<<<<<<< HEAD
+=======
+    L.easyButton('fa-plus',
+              function (){
+                var popup = alert("To add new obstacles to the map, long-press (or right-click on desktop) the location of the obstacle and follow the prompts.");
+              },
+             'Add new obstacle'
+            );
+>>>>>>> f646921cd0b0be9ffcec8983c9669b9b89318def
 
   </script>
 {% endblock %}
