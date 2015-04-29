@@ -19,3 +19,15 @@ body {
 .jumbotron h1 {
 	font-weight: bold;
 }
+
+table img {
+  width: 30px; 
+}
+
+td {
+  padding: 10px; 
+}
+
+table, td, th {
+    border: 1px solid black;
+}
