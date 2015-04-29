@@ -21,7 +21,7 @@ API_URL = app.config['API_URL']
 
 
 @app.route('/')
-def index(): 
+def index():
     return render_template('index.html')
 
 @app.route('/map', methods=['GET'])
