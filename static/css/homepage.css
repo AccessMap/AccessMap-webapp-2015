@@ -3,7 +3,7 @@ body {
 }
 
 .jumbotron {
-  background: url("../img/hill.png");
+  background: url("../img/hill.jpg");
   background-size: cover;
   background-position: right center; 
   background-repeat: no-repeat;
