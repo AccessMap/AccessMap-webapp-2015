@@ -74,6 +74,7 @@
     text-decoration: inherit;
     color: #444;
     font-size: 16px;
+    vertical-align: middle;
 }
 
 .leaflet-control-search .search-tooltip {
