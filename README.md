@@ -1,19 +1,17 @@
 # Hack the Commute: Bus Stop Accessibility
 
-This app is developed to help people who use wheelchairs plan their routes in Seattle, taking into account their specific accessibility needs. It can be used as an extention to OneBusAway application or as a separate tool.
-
-Today, the app allows users to check the terrain around the bus stop for accessibility issues, report obstacles and verify information contribued by other users. The future goal is to allow users to search for an accesible route based on their preferences.
+This app was developed to help people with mobility challenges plan their routes in Seattle, taking into account their specific accessibility needs.  It was first created for the Hack the Commute hackathon in April 2015. Today, the app allows users to check the terrain around the bus stop for accessibility issues, report obstacles and verify information contribued by other users. The future goal is to allow users to search for an accesible route based on their preferences.
 
 Our app is live at [http://hackcessible.herokuapp.com/](http://hackcessible.herokuapp.com/).
 
 Here's a pretty picture:
-![Screenshot of Application](Screenshot.png "Hackcessible Transit App")
+![Screenshot of Application](screenshot.png "Hackcessible Transit App")
 
 ## Challenge and Approach
 
-Our submission is for [Challenge #2: Improve the commuter experience in any single mode](http://tmpl.at/1EykAbV).
+Our submission at the hackathon was for [Challenge #2: Improve the commuter experience in any single mode](http://tmpl.at/1EykAbV).
 
-Today, a person in a wheelchair does not have a full or unified access to up-to-date information about upgraded ramp curbs, sidewalk closures, road construction, steep hills or other obtacles that can block their mobility.
+Today, a person with mobility challenges does not have a full or unified access to up-to-date information about upgraded ramp curbs, sidewalk closures, road construction, steep hills or other obtacles that can block their mobility.
 
 We believe that every person in Seattle should enjoy freedom and convenience of commuting.
 
