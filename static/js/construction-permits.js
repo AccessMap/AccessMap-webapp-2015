@@ -5,7 +5,6 @@ function requestConstructionPermitUpdate(layerGroup, map, api_url) {
       iconAnchor: [10, 0]
   });
 
-  console.log(layerGroup);
   function drawConstruction(data) {
     // TODO: turn this into map tiles for several zoom levels to speed
     // things up (slowness is due to drawing so many lines)
