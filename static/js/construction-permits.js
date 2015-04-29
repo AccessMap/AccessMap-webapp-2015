@@ -22,7 +22,9 @@ function requestConstructionPermitUpdate(layerGroup, map, api_url) {
         });
 
         //Display info when user clicks
-        var popup = L.popup().setContent("<b>Construction Permit</b>");
+        var popup = L.popup().setContent("<b>Construction Permit</b><br>" +
+                                          "Permit no. " + geoJSON['properties']['permit_no'] + "<br>" +
+                                          "Mobility impact: " + geoJSON['properties']['mobility_impact_text']);
         permitFeature.bindPopup(popup);
 
         layerGroup.addLayer(permitFeature);
