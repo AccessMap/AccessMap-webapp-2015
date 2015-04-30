@@ -13,7 +13,7 @@ function requestElevationsUpdate(layerGroup, map, api_url) {
       var coords = geoJSON['coordinates'];
       var coord1 = [coords[0][1], coords[0][0]];
       var coord2 = [coords[1][1], coords[1][0]];
-      var steepness = "Significant</b><br>(greater than 5% grade)";
+      var steepness = "Significant</b><br>(greater than " + (high * 100).toFixed(2) + "% grade)";
       if (bounds.contains(coord1) || bounds.contains(coord2)) {
         line = L.geoJson(geoJSON, {
           'style': function(feature) {
@@ -22,12 +22,12 @@ function requestElevationsUpdate(layerGroup, map, api_url) {
                       'weight': 5,
                       'opacity': 0.6};
             } else if (feature.geometry.properties.grade > mid) {
-              steepness = "Moderate</b><br>(between 1% and 5% grade)";
+              steepness = "Moderate</b><br>(between " + (mid * 100).toFixed(2) + "% and " + (high * 100).toFixed(2) + "% grade)";
               return {'color': '#FFFF00',
                       'weight': 5,
                       'opacity': 0.6};
             } else {
-              steepness = "Negligible</b><br>(less than 1% grade)";
+              steepness = "Negligible</b><br>(less than " + (mid * 100).toFixed(2) + "% grade)";
               return {'color': '#00FF00',
                       'weight': 5,
                       'opacity': 0.6};
