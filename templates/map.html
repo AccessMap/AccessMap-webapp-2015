@@ -121,10 +121,12 @@
     });
 
     map.on('contextmenu', function(e) {
-      var popup = confirm("Do you want to report a new obstacle?");
-      if (popup == true) {
-          window.location.href = 'report?lat=' + e.latlng.lat + '&lon=' + e.latlng.lng;
-      }
+      var popLocation = e.latlng;
+      link = "<a href=report?lat=" + popLocation.lat + "&lon=" + popLocation.lng + ">Report a new obstacle</a>"
+      var popup = L.popup()
+        .setLatLng(popLocation)
+        .setContent(link)
+        .openOn(map);
     });
 
     {% if 'lat' in location_args and 'lon' in location_args %}
