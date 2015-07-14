@@ -28,7 +28,6 @@
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
   <script src="{{ url_for('static', filename='js/leaflet-search.min.js') }}"></script>
   <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.css"/>
-  <script src="{{ url_for('static', filename='js/easy-button.js') }}"></script>
   <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
@@ -172,13 +171,5 @@
     new L.Control.Zoom().addTo(map);
     L.control.locate().addTo(map);
     L.control.layers(null, overlayMaps).addTo(map);
-
-    L.easyButton('fa-plus',
-              function (){
-                var popup = alert("To add new obstacles to the map, long-press (or right-click on desktop) the location of the obstacle and follow the prompts.");
-              },
-             'Add new obstacle'
-            );
-
   </script>
 {% endblock %}
