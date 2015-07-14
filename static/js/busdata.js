@@ -36,7 +36,7 @@ function requestStopsUpdate(layerGroup, map) {
   }
 
   function addMarkers(request_data) {
-    data = request_data['data']['list'];
+    data = request_data.data.list;
     // Destroy the layers in stopLayerGroup
     layerGroup.clearLayers();
     // Create the new ones
@@ -47,13 +47,13 @@ function requestStopsUpdate(layerGroup, map) {
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
-          'coordinates': [row['lon'], row['lat']]
+          'coordinates': [row.lon, row.lat]
         },
         'properties': {
-          'name': row['name'],
-          'direction': row['direction'],
-          'id': row['id'],
-          'routeIds': row['routeIds']
+          'name': row.name,
+          'direction': row.direction,
+          'id': row.id,
+          'routeIds': row.routeIds
         }
       };
       marker = L.geoJson(geoJSON, {
@@ -63,7 +63,7 @@ function requestStopsUpdate(layerGroup, map) {
       });
 
       //Display info when user clicks on the bus stop
-      var popup = L.popup().setContent("<b>Bus Stop at " + row['name'] + "</b>");
+      var popup = L.popup().setContent("<b>Bus Stop at " + row.name + "</b>");
       marker.bindPopup(popup);
 
       layerGroup.addLayer(marker);
