@@ -4,24 +4,23 @@ function requestElevationsUpdate(layerGroup, map, api_url) {
   var mid = 0.05;
 
   function drawElevations(data) {
-    // TODO: turn this into map tiles for several zoom levels to speed
-    // things up (slowness is due to drawing so many lines)
     layerGroup.clearLayers();
     var bounds = map.getBounds();
-    for (i = 0; i < data.length; i++) {
-      var geoJSON = data[i];
-      var coords = geoJSON['coordinates'];
+
+    for (i = 0; i < data.features.length; i++) {
+      var feature = data.features[i];
+      var coords = feature.geometry.coordinates;
       var coord1 = [coords[0][1], coords[0][0]];
       var coord2 = [coords[1][1], coords[1][0]];
       var steepness = "Significant</b><br>(greater than " + (high * 100).toFixed(2) + "% grade)";
       if (bounds.contains(coord1) || bounds.contains(coord2)) {
-        line = L.geoJson(geoJSON, {
-          'style': function(feature) {
-            if (feature.geometry.properties.grade >= high) {
+        line = L.geoJson(feature, {
+          'style': function(f) {
+            if (f.properties.grade >= high) {
               return {'color': '#FF0000',
                       'weight': 5,
                       'opacity': 0.6};
-            } else if (feature.geometry.properties.grade > mid) {
+            } else if (f.properties.grade > mid) {
               steepness = "Moderate</b><br>(between " + (mid * 100).toFixed(2) + "% and " + (high * 100).toFixed(2) + "% grade)";
               return {'color': '#FFFF00',
                       'weight': 5,
@@ -48,7 +47,7 @@ bounds = map.getBounds().toBBoxString();
 // Request data
 $.ajax({
   type: 'GET',
-  url: api_url + '/sidewalks.json',
+  url: api_url + '/sidewalks.geojson',
   data: {
     bbox: bounds
   },
