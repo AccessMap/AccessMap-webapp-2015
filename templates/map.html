@@ -32,10 +32,8 @@
   <script src="{{ url_for('static', filename='js/busdata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevation.js') }}"></script>
   <script src="{{ url_for('static', filename='js/curbdata.js') }}"></script>
-  <!--
   <script src="{{ url_for('static', filename='js/userreporteddata.js') }}"></script>
   <script src="{{ url_for('static', filename='js/elevators.js') }}"></script>
-  -->
   <script src="{{ url_for('static', filename='js/construction-permits.js') }}"></script>
 
   <script>
@@ -72,22 +70,20 @@
     }
 
     // Read in data to increase speed later on (generate a promise)
-
-    // Temporarily disabled until these features are further fleshed ou
-    // userDataDataRequest = $.ajax({
-    //   url: '{{ url_for("static", filename="data/userReported.json") }}'
-    // });
-    // elevatorDataRequest = $.ajax({
-    //   url: '{{ url_for("static", filename="data/elevators.json") }}'
-    // });
+    userDataDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/userReported.json") }}'
+    });
+    elevatorDataRequest = $.ajax({
+      url: '{{ url_for("static", filename="data/elevators.json") }}'
+    });
 
     updateLayers = function() {
       requestStopsUpdate(stops, map);
       requestElevationsUpdate(elevationlayer, map, {{ api_url|tojson }});
       requestCurbsUpdate(curbs, map, {{ api_url|tojson }});
       requestConstructionPermitUpdate(permits, map, {{ api_url|tojson }});
-      //requestUserDataUpdate(userData, map);
-      //requestElevatorUpdate(elevators, map);
+      requestUserDataUpdate(userData, map);
+      requestElevatorUpdate(elevators, map);
     }
 
     map.on('load', function(e) {
@@ -107,16 +103,16 @@
         map.removeLayer(elevationlayer);
         map.removeLayer(curbs);
         map.removeLayer(permits);
-        //map.removeLayer(userData);
-        //map.removeLayer(elevators);
+        map.removeLayer(userData);
+        map.removeLayer(elevators);
         elevationTiles.addTo(map);
       } else {
         stops.addTo(map);
         elevationlayer.addTo(map);
         curbs.addTo(map);
         permits.addTo(map);
-        //userData.addTo(map);
-        //elevators.addTo(map);
+        userData.addTo(map);
+        elevators.addTo(map);
         map.removeLayer(elevationTiles);
       }
     });
