@@ -10,21 +10,23 @@ function requestConstructionPermitUpdate(layerGroup, map, api_url) {
     // things up (slowness is due to drawing so many lines)
     layerGroup.clearLayers();
     var bounds = map.getBounds();
-    for (i = 0; i < data.length; i++) {
-      var geoJSON = data[i];
-      var coord = geoJSON['coordinates'];
+
+    for (i = 0; i < data.features.length; i++) {
+      var feature = data.features[i];
+      var coord = feature.geometry.coordinates;
       var latlng = [coord[1], coord[0]];
       if (bounds.contains(latlng)) {
-        permitFeature = L.geoJson(geoJSON, {
-          pointToLayer: function(feature, latlng) {
+        permitFeature = L.geoJson(feature, {
+          pointToLayer: function(f, latlng) {
             return L.marker(latlng, {icon: constructionIcon});
           }
         });
 
         //Display info when user clicks
+        var props = feature.properties;
         var popup = L.popup().setContent("<b>Construction Permit</b><br>" +
-                                          "Permit no. " + geoJSON['properties']['permit_no'] + "<br>" +
-                                          "Mobility impact: " + geoJSON['properties']['mobility_impact_text']);
+                                          "Permit no. " + props.permit_no + "<br>" +
+                                          "Mobility impact: " + props.mobility_impact_text);
         permitFeature.bindPopup(popup);
 
         layerGroup.addLayer(permitFeature);
@@ -36,7 +38,7 @@ bounds = map.getBounds().toBBoxString();
 // Request data
 $.ajax({
   type: 'GET',
-  url: api_url + '/permits.json',
+  url: api_url + '/permits.geojson',
   data: {
     bbox: bounds
   },
