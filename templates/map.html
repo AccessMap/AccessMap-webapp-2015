@@ -15,6 +15,7 @@
         width: 100%;
     }
   </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet-routing-machine.css') }}"/>
 {% endblock %}
 
 {% block content %}
@@ -36,6 +37,10 @@
   <script src="{{ url_for('static', filename='js/elevators.js') }}"></script>
   -->
   <script src="{{ url_for('static', filename='js/construction-permits.js') }}"></script>
+  <!-- Routing interface -->
+  <script src="{{ url_for('static', filename='js/leaflet-routing-machine.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/corslite.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/lrm-accessmap.js') }}"></script>
 
   <script>
     var FEATUREZOOM = 17;
@@ -171,6 +176,21 @@
     // Add controls to map
     map.addControl(searchControl);
     new L.Control.Zoom().addTo(map);
+
+    L.Routing.control({
+      waypoints: [
+        L.latLng([47.6700969, -122.3823184]),
+        L.latLng([47.6680523, -122.3792178])
+      ],
+      router: new L.Routing.AccessMap(),
+      routeWhileDragging: true,
+      lineOptions: {
+        styles: [{color: 'black', opacity: 0.15, weight: 9},
+                 {color: 'white', opacity: 0.8, weight: 6},
+                 {color: 'blue', opacity: 1, weight: 2}]
+      }
+    }).addTo(map);
+
     L.control.locate().addTo(map);
     L.control.layers(null, overlayMaps).addTo(map);
   </script>
