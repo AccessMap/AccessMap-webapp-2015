@@ -33,7 +33,7 @@
 								timedOut = true;
 								callback.call(context || callback, {
 									status: -1,
-									message: 'OSRM request timed out.'
+									message: 'AccessMap request timed out.'
 								});
 							}, this.options.timeout);
 
